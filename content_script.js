@@ -1,25 +1,34 @@
 // --------------------
 // Define Global Variables
 const observerOptions = { attributes: true, childList: true };
-let elementIds = {};
 let passedPages = {};
 let isFullScreen = false;
 // --------------------
 
-const textElementAnalysis = (element, j) => {
+const characterAnalysis = () => {
+  return true;
+};
+
+const textElementAnalysis = (element) => {
   if (!isFullScreen) {
     observer.disconnect();
     return;
   }
 
-  const id = element.parentElement.parentElement.parentElement.parentElement.getAttribute("id");
-  element.id = `${id}_${j}`;
-
   if (!element) return;
+
+  // ここで <<>> と一致するかの判定をする
+
+  if (!element.dataset.originalTime) {
+    element.dataset.originalTime = element.innerHTML;
+  }
+
+  const originalTime = element.dataset.originalTime;
+  console.log(originalTime, element.dataset);
 
   element.innerHTML = new Date();
 
-  elementIds[element.id] = setTimeout(function () {
+  setTimeout(function () {
     textElementAnalysis(element);
   }, 100);
 };
@@ -51,9 +60,9 @@ const pageInfoAnalysis = () => {
     return;
   }
 
-  [...htmlCollection].forEach((element, j) => {
+  [...htmlCollection].forEach((element, i) => {
     if (0 < element.innerHTML.length) {
-      textElementAnalysis(element, j);
+      textElementAnalysis(element, i);
     }
   });
 };
@@ -80,7 +89,6 @@ document.addEventListener("fullscreenchange", function () {
     } else {
       console.log("Exited full screen mode.");
       isFullScreen = false;
-      elementIds = {};
       passedPages = {};
     }
   }, 100);
