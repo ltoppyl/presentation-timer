@@ -1,0 +1,16 @@
+{
+  "name": "Presentation Timer",
+  "short_name": "Presentation Timer",
+  "description": "presentation timer for Google extensions.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "128": "icons/icon_128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://docs.google.com/presentation/*"],
+      "js": ["content_script.js"]
+    }
+  ]
+}
