@@ -5,6 +5,7 @@ const stringPattern = /&lt;&lt;[+:-\d]+&gt;&gt;/;
 let passedPages = {};
 let isFullScreen = false;
 let startTimeCountDown;
+let startTimeCountUp;
 // --------------------
 
 const conversionSecToString = (sec) => {
@@ -22,12 +23,12 @@ const conversionSecToString = (sec) => {
 const calCountUp = () => {
   const d = new Date();
 
-  if (!startTimeCountDown) {
-    startTimeCountDown = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  if (!startTimeCountUp) {
+    startTimeCountUp = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
   }
 
   const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-  let distance = now - startTimeCountDown;
+  let distance = now - startTimeCountUp;
 
   // Support only when the date is shifted by one day, such as when crossing a date.
   if (distance < 0) {
@@ -38,6 +39,8 @@ const calCountUp = () => {
 };
 
 const calCountDown = (timeString) => {
+  const d = new Date();
+
   return "countDown!! " + timeString;
 };
 
