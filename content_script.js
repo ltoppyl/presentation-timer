@@ -81,7 +81,7 @@ const pageInfoAnalysis = () => {
 
   pageInfo = iframe.contentWindow.document.querySelector('[role="option"][aria-selected="true"]');
 
-  // delay to avoid pageInfo becoming undefined the first time
+  // Delay to avoid pageInfo becoming undefined the first time
   if (!pageInfo) {
     setTimeout(pageInfoAnalysis, 500);
     return;
