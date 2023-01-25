@@ -1,7 +1,7 @@
 // --------------------
 // Define Global Variables
 const observerOptions = { attributes: true, childList: true };
-const stringPattern = /&lt;&lt;[+:-\d]+&gt;&gt;/;
+const stringPattern = /^&lt;&lt;[+:-\d]+&gt;&gt;$/;
 let passedPages = {};
 let isFullScreen = false;
 let startTimeCountDown;
