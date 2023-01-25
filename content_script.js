@@ -1,12 +1,17 @@
 // --------------------
 // Define Global Variables
 const observerOptions = { attributes: true, childList: true };
+const stringPattern = /&lt;&lt;[+:-\d]+&gt;&gt;/;
 let passedPages = {};
 let isFullScreen = false;
 // --------------------
 
-const characterAnalysis = () => {
-  return true;
+const calCountUp = () => {
+  return "countUp!!";
+};
+
+const calCountDown = (timeString) => {
+  return "countDown!! " + timeString;
 };
 
 const textElementAnalysis = (element) => {
@@ -15,18 +20,51 @@ const textElementAnalysis = (element) => {
     return;
   }
 
-  if (!element) return;
-
-  // ここで <<>> と一致するかの判定をする
+  if (!element || !element.innerHTML) return;
 
   if (!element.dataset.originalTime) {
     element.dataset.originalTime = element.innerHTML;
   }
 
-  const originalTime = element.dataset.originalTime;
-  console.log(originalTime, element.dataset);
+  const originalTimeString = element.dataset.originalTime;
 
-  element.innerHTML = new Date();
+  if (!stringPattern.test(originalTimeString)) {
+    return;
+  }
+
+  let direction = originalTimeString.match(/[+-]/);
+  if (!direction) {
+    return;
+  }
+  direction = direction[0];
+
+  const timeString = originalTimeString
+    .split(direction)
+    .join("")
+    .split("&lt;")
+    .join("")
+    .split("&gt;")
+    .join("");
+
+  // If timeString is not null at this point, all +- must be removed
+  if (timeString) {
+    if (/\+/.test(timeString) || /-/.test(timeString)) {
+      return;
+    }
+  }
+
+  let displayString;
+
+  // If direction is +, expect timeString to be null since only <<+>> is supported
+  if (direction === "+" && !timeString) {
+    displayString = calCountUp();
+  } else if (direction === "-" && timeString) {
+    displayString = calCountDown(timeString);
+  } else {
+    return;
+  }
+
+  element.innerHTML = displayString;
 
   setTimeout(function () {
     textElementAnalysis(element);
