@@ -39,9 +39,29 @@ const calCountUp = () => {
 };
 
 const calCountDown = (timeString) => {
+  const timeArray = timeString.split(":");
+
+  // Only <<##:$$->> forms are supported
+  if (timeArray.length !== 2) {
+    return;
+  }
+
+  const countdownSec = 60 * timeArray[0] + timeArray[1];
+
   const d = new Date();
 
-  return "countDown!! " + timeString;
+  if (!startTimeCountDown) {
+    startTimeCountDown = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  }
+
+  const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  let distance = countdownSec - (now - startTimeCountDown);
+
+  if (distance < 0) {
+    distance = 0;
+  }
+
+  return conversionSecToString(distance);
 };
 
 const textElementAnalysis = (element) => {
@@ -88,13 +108,16 @@ const textElementAnalysis = (element) => {
   // If direction is +, expect timeString to be null since only <<+>> is supported
   if (direction === "+" && !timeString) {
     displayString = calCountUp();
-  } else if (direction === "-" && timeString) {
+  } else if (direction == "-" && timeString && /:/.test(timeString)) {
     displayString = calCountDown(timeString);
   } else {
     return;
   }
 
-  element.innerHTML = displayString;
+  // Probably not necessary, but just in case displayString exists.
+  if (displayString) {
+    element.innerHTML = displayString;
+  }
 
   setTimeout(function () {
     textElementAnalysis(element);
@@ -157,6 +180,7 @@ document.addEventListener("fullscreenchange", function () {
     } else {
       console.log("Exited full screen mode.");
       startTimeCountDown = undefined;
+      startTimeCountUp = undefined;
       isFullScreen = false;
       passedPages = {};
     }
