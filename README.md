@@ -1,1 +1,1 @@
-# slide-timer
+# ⏳ Presentation Timer
