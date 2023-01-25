@@ -1,15 +1,15 @@
 // --------------------
 // Define Global Variables
-const observerOptions = { attributes: true, childList: true };
-const stringPattern = /^&lt;&lt;[+:-\d]+&gt;&gt;$/;
-let passedPages = {};
-let isFullScreen = false;
-let startTimeCountDown;
-let startTimeCountUp;
+const g_observerOptions = { attributes: true, childList: true };
+const g_stringPattern = /^&lt;&lt;[+:-\d]+&gt;&gt;$/;
+let g_passedPages = {};
+let g_isFullScreen = false;
+let g_startTimeCountDown;
+let g_startTimeCountUp;
 // --------------------
 
 const textElementAnalysis = (element) => {
-  if (!isFullScreen) {
+  if (!g_isFullScreen) {
     observer.disconnect();
     return;
   }
@@ -22,7 +22,7 @@ const textElementAnalysis = (element) => {
 
   const originalTimeString = element.dataset.originalTime;
 
-  if (!stringPattern.test(originalTimeString)) {
+  if (!g_stringPattern.test(originalTimeString)) {
     return;
   }
 
@@ -86,9 +86,9 @@ const pageInfoAnalysis = () => {
     return;
   }
 
-  if (!(pageInfo.innerText in passedPages)) {
-    observer.observe(pageInfo, observerOptions);
-    passedPages[pageInfo.innerText] = true;
+  if (!(pageInfo.innerText in g_passedPages)) {
+    observer.observe(pageInfo, g_observerOptions);
+    g_passedPages[pageInfo.innerText] = true;
   }
 
   const htmlCollection = iframe.contentWindow.document.getElementsByTagName("text");
@@ -120,15 +120,15 @@ document.addEventListener("fullscreenchange", function () {
   setTimeout(function () {
     if (document.fullscreenElement) {
       console.log("Entered full screen mode.");
-      observer.observe(document.documentElement, observerOptions);
-      isFullScreen = true;
+      observer.observe(document.documentElement, g_observerOptions);
+      g_isFullScreen = true;
       pageInfoAnalysis();
     } else {
       console.log("Exited full screen mode.");
-      startTimeCountDown = undefined;
-      startTimeCountUp = undefined;
-      isFullScreen = false;
-      passedPages = {};
+      g_startTimeCountDown = undefined;
+      g_startTimeCountUp = undefined;
+      g_isFullScreen = false;
+      g_passedPages = {};
     }
   }, 100);
 });
