@@ -4,10 +4,37 @@ const observerOptions = { attributes: true, childList: true };
 const stringPattern = /&lt;&lt;[+:-\d]+&gt;&gt;/;
 let passedPages = {};
 let isFullScreen = false;
+let startTimeCountDown;
 // --------------------
 
+const conversionSecToString = (sec) => {
+  const hour = Math.floor(sec / 3600);
+  const minutes = Math.floor((sec - hour * 3600) / 60);
+  const seconds = sec - hour * 3600 - minutes * 60;
+
+  if (0 < hour) {
+    return `${hour}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`;
+  } else {
+    return `${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`;
+  }
+};
+
 const calCountUp = () => {
-  return "countUp!!";
+  const d = new Date();
+
+  if (!startTimeCountDown) {
+    startTimeCountDown = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  }
+
+  const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  let distance = now - startTimeCountDown;
+
+  // Support only when the date is shifted by one day, such as when crossing a date.
+  if (distance < 0) {
+    distance = 86400 + distance;
+  }
+
+  return conversionSecToString(distance);
 };
 
 const calCountDown = (timeString) => {
@@ -126,6 +153,7 @@ document.addEventListener("fullscreenchange", function () {
       pageInfoAnalysis();
     } else {
       console.log("Exited full screen mode.");
+      startTimeCountDown = undefined;
       isFullScreen = false;
       passedPages = {};
     }
