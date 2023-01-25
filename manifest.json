@@ -10,7 +10,12 @@
   "content_scripts": [
     {
       "matches": ["https://docs.google.com/presentation/*"],
-      "js": ["src/content.js"]
+      "js": [
+        "src/content.js",
+        "src/conversionSecToString.js",
+        "src/calCountUp.js",
+        "src/calCountDown.js"
+      ]
     }
   ]
 }

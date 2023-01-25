@@ -8,62 +8,6 @@ let startTimeCountDown;
 let startTimeCountUp;
 // --------------------
 
-const conversionSecToString = (sec) => {
-  const hour = Math.floor(sec / 3600);
-  const minutes = Math.floor((sec - hour * 3600) / 60);
-  const seconds = sec - hour * 3600 - minutes * 60;
-
-  if (0 < hour) {
-    return `${hour}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`;
-  } else {
-    return `${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`;
-  }
-};
-
-const calCountUp = () => {
-  const d = new Date();
-
-  if (!startTimeCountUp) {
-    startTimeCountUp = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-  }
-
-  const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-  let distance = now - startTimeCountUp;
-
-  // Support only when the date is shifted by one day, such as when crossing a date.
-  if (distance < 0) {
-    distance = 86400 + distance;
-  }
-
-  return conversionSecToString(distance);
-};
-
-const calCountDown = (timeString) => {
-  const timeArray = timeString.split(":");
-
-  // Only <<##:$$->> forms are supported
-  if (timeArray.length !== 2) {
-    return;
-  }
-
-  const countdownSec = 60 * timeArray[0] + timeArray[1];
-
-  const d = new Date();
-
-  if (!startTimeCountDown) {
-    startTimeCountDown = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-  }
-
-  const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-  let distance = countdownSec - (now - startTimeCountDown);
-
-  if (distance < 0) {
-    distance = 0;
-  }
-
-  return conversionSecToString(distance);
-};
-
 const textElementAnalysis = (element) => {
   if (!isFullScreen) {
     observer.disconnect();
@@ -107,8 +51,10 @@ const textElementAnalysis = (element) => {
 
   // If direction is +, expect timeString to be null since only <<+>> is supported
   if (direction === "+" && !timeString) {
+    // src/calCountUp.js
     displayString = calCountUp();
   } else if (direction == "-" && timeString && /:/.test(timeString)) {
+    // src/calCountDown.js
     displayString = calCountDown(timeString);
   } else {
     return;
