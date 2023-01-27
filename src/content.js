@@ -1,7 +1,7 @@
 // --------------------
 // Define Global Variables
 const g_observerOptions = { attributes: true, childList: true };
-const g_stringPattern = /^&lt;&lt;[+:-\d]+&gt;&gt;$/;
+const g_stringPattern = /^&lt;&lt;[+:-\w]+&gt;&gt;$/;
 let g_passedPages = {};
 let g_isFullScreen = false;
 let g_startTimeCountDown;
@@ -26,38 +26,33 @@ const textElementAnalysis = (element) => {
     return;
   }
 
-  let direction = originalTimeString.match(/[+-]/);
-  if (!direction) {
+  const timeString = originalTimeString.split("&lt;").join("").split("&gt;").join("");
+
+  if (!timeString) {
     return;
-  }
-  direction = direction[0];
-
-  const timeString = originalTimeString
-    .split(direction)
-    .join("")
-    .split("&lt;")
-    .join("")
-    .split("&gt;")
-    .join("");
-
-  // If timeString is not null at this point, all +- must be removed
-  if (timeString) {
-    if (/\+/.test(timeString) || /-/.test(timeString)) {
-      return;
-    }
   }
 
   let displayString;
 
-  // If direction is +, expect timeString to be null since only <<+>> is supported
-  if (direction === "+" && !timeString) {
+  if (timeString === "+") {
     // src/calCountUp.js
     displayString = calCountUp();
-  } else if (direction == "-" && timeString && /:/.test(timeString)) {
-    // src/calCountDown.js
-    displayString = calCountDown(timeString);
+  } else if (timeString === "time") {
+    // 現在時刻の表示
+    // const d = new Date();
+    // displayString = `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
   } else {
-    return;
+    // 以下では ##:$$- (# と $)は数字のみ で構成されているもののみをサポートする
+    if (timeString[timeString.length - 1] == "-" && (timeString.match(/-/g) || []).length === 1) {
+      const timeStringRemoveMinus = timeString.slice(0, -1);
+      if (/^\d{1,3}:\d{2}$/.test(timeStringRemoveMinus)) {
+        displayString = calCountDown(timeStringRemoveMinus);
+      } else {
+        return;
+      }
+    } else {
+      return;
+    }
   }
 
   // Probably not necessary, but just in case displayString exists.
