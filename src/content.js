@@ -39,8 +39,8 @@ const textElementAnalysis = (element) => {
     displayString = calCountUp();
   } else if (timeString === "time") {
     // 現在時刻の表示
-    // const d = new Date();
-    // displayString = `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+    const d = new Date();
+    displayString = `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
   } else {
     // 以下では ##:$$- (# と $)は数字のみ で構成されているもののみをサポートする
     if (timeString[timeString.length - 1] == "-" && (timeString.match(/-/g) || []).length === 1) {
