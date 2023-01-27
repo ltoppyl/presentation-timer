@@ -1,7 +1,5 @@
 // --------------------
 // Define Global Variables
-const g_observerOptions = { attributes: true, childList: true };
-const g_stringPattern = /^&lt;&lt;[+:-\w]+&gt;&gt;$/;
 let g_passedPages = {};
 let g_isFullScreen = false;
 let g_startTimeCountDown;
@@ -22,7 +20,7 @@ const textElementAnalysis = (element) => {
 
   const originalTimeString = element.dataset.originalTime;
 
-  if (!g_stringPattern.test(originalTimeString)) {
+  if (!/^&lt;&lt;[+:-\w]+&gt;&gt;$/.test(originalTimeString)) {
     return;
   }
 
@@ -82,7 +80,7 @@ const pageInfoAnalysis = () => {
   }
 
   if (!(pageInfo.innerText in g_passedPages)) {
-    observer.observe(pageInfo, g_observerOptions);
+    observer.observe(pageInfo, observerOptions);
     g_passedPages[pageInfo.innerText] = true;
   }
 
@@ -109,13 +107,14 @@ const callback = (mutations) => {
 };
 
 const observer = new MutationObserver(callback);
+const observerOptions = { attributes: true, childList: true };
 // --------------------
 
 document.addEventListener("fullscreenchange", function () {
   setTimeout(function () {
     if (document.fullscreenElement) {
       console.log("Entered full screen mode.");
-      observer.observe(document.documentElement, g_observerOptions);
+      observer.observe(document.documentElement, observerOptions);
       g_isFullScreen = true;
       pageInfoAnalysis();
     } else {
