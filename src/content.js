@@ -42,7 +42,7 @@ const textElementAnalysis = (element) => {
     const d = new Date();
     displayString = `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
   } else {
-    // 以下では ##:$$- (# と $)は数字のみ で構成されているもののみをサポートする
+    // In the following, only those consisting of ##:$$- (# and $ are numbers only) are supported
     if (timeString[timeString.length - 1] == "-" && (timeString.match(/-/g) || []).length === 1) {
       const timeStringRemoveMinus = timeString.slice(0, -1);
       if (/^\d{1,3}:\d{2}$/.test(timeStringRemoveMinus)) {
