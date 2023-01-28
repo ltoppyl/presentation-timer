@@ -5,6 +5,7 @@
 //   totalTime: int,
 // };
 let g_passedPages = {};
+
 let g_isFullScreen = false;
 let g_startTimeCountDown;
 let g_startTimeCountUp;
@@ -24,13 +25,11 @@ const textElementAnalysis = (element) => {
   }
 
   const originalTimeString = element.dataset.originalTime;
-
   if (!/^&lt;&lt;[+:-\w]+&gt;&gt;$/.test(originalTimeString)) {
     return;
   }
 
   const timeString = originalTimeString.split("&lt;").join("").split("&gt;").join("");
-
   if (!timeString) {
     return;
   }
@@ -38,8 +37,7 @@ const textElementAnalysis = (element) => {
   let displayString;
 
   if (timeString === "+") {
-    // src/calCountUp.js
-    displayString = calCountUp();
+    displayString = calCountUp(); // src/calCountUp.js
   } else if (timeString === "time") {
     // Display of current time
     const d = new Date();
@@ -57,7 +55,7 @@ const textElementAnalysis = (element) => {
     if (timeString[timeString.length - 1] == "-" && (timeString.match(/-/g) || []).length === 1) {
       const timeStringRemoveMinus = timeString.slice(0, -1);
       if (/^\d{1,3}:\d{2}$/.test(timeStringRemoveMinus)) {
-        displayString = calCountDown(timeStringRemoveMinus);
+        displayString = calCountDown(timeStringRemoveMinus); // src/calCountDown.js
       } else {
         return;
       }
@@ -79,7 +77,6 @@ const textElementAnalysis = (element) => {
 const pageInfoAnalysis = () => {
   let pageInfo;
   const iframe = document.querySelector("iframe.punch-present-iframe");
-
   if (!iframe) {
     return;
   }
@@ -102,17 +99,16 @@ const pageInfoAnalysis = () => {
     };
   }
 
+  // Detects when slides are switched
   if (g_lastIndex !== undefined) {
     if (g_lastIndex !== pageInfo.innerText) {
-      // src/calTotalTime.js
-      calTotalTime(pageInfo.innerText);
+      calTotalTime(pageInfo.innerText); // src/calTotalTime.js
     }
   }
 
   g_lastIndex = pageInfo.innerText;
 
   const htmlCollection = iframe.contentWindow.document.getElementsByTagName("text");
-
   if (htmlCollection.length == 0) {
     return;
   }
@@ -146,9 +142,6 @@ document.addEventListener("fullscreenchange", function () {
       pageInfoAnalysis();
     } else {
       console.log("Exited full screen mode.");
-      g_startTimeCountDown = undefined;
-      g_startTimeCountUp = undefined;
-      g_isFullScreen = false;
 
       // Add time for the last open slide
       // After this g_passedPages is initialized, so the arguments are passed as appropriate
@@ -164,6 +157,10 @@ document.addEventListener("fullscreenchange", function () {
       displayAlertText += `--------------------\nTotal Time : ${conversionSecToString(totalTime)}`;
 
       window.alert(displayAlertText);
+
+      g_startTimeCountDown = undefined;
+      g_startTimeCountUp = undefined;
+      g_isFullScreen = false;
       g_passedPages = {};
       g_lastIndex = undefined;
     }
