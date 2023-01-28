@@ -150,11 +150,22 @@ document.addEventListener("fullscreenchange", function () {
       // Creating String for Alert Output
       let displayAlertText = "";
       let totalTime = 0;
+      let i = 0;
       for (const [key, value] of Object.entries(g_passedPages)) {
         totalTime += value.totalTime;
-        displayAlertText += `Slide ${key} : ${conversionSecToString(value.totalTime)}\n`;
+        if (i !== 0 && i % 5 == 0) {
+          displayAlertText += `\n${("0" + key).slice(-2)} : ${conversionSecToString(
+            value.totalTime
+          )}     `;
+        } else {
+          displayAlertText += `${("0" + key).slice(-2)} : ${conversionSecToString(
+            value.totalTime
+          )}     `;
+        }
+
+        i += 1;
       }
-      displayAlertText += `--------------------\nTotal Time : ${conversionSecToString(totalTime)}`;
+      displayAlertText += `\n--------------------\nTotal Time: ${conversionSecToString(totalTime)}`;
 
       window.alert(displayAlertText);
 
