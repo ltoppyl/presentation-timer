@@ -35,52 +35,6 @@ const textElementAnalysis = (element) => {
     return;
   }
 
-  // const iframe = document.querySelector("iframe.punch-present-iframe");
-  // if (iframe) {
-  //   const index = iframe.contentWindow.document.querySelector(
-  //     '[role="option"][aria-selected="true"]'
-  //   ).innerHTML;
-  //   if (index && index in g_passedPages) {
-  //     // true の index が変わったかどうかの判定
-  //     // 変わった場合、それまで true だったものの startTime と今の差分で時間をadd, startTime を undefined に
-  //     // + 新しく true になったものの startTime を設定
-  //     // 変わってない場合は特にすることなし！
-
-  //     let beforeIndex = "-1";
-
-  //     console.log(g_passedPages);
-
-  //     for (const [key, value] of Object.entries(g_passedPages)) {
-  //       if (value.isAddTime == true) {
-  //         beforeIndex = key;
-  //       }
-  //     }
-
-  //     if (index !== beforeIndex) {
-  //       // 前の分を add
-  //       const d = new Date();
-  //       const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-  //       let distance = now - g_passedPages[beforeIndex].startTime;
-
-  //       // Support only when the date is shifted by one day, such as when crossing a date.
-  //       if (distance < 0) {
-  //         distance = 86400 + distance;
-  //       }
-
-  //       console.log(
-  //         `beforeIndex: ${beforeIndex} index: ${index} distance: ${distance} now: ${now} startTime: ${g_passedPages[beforeIndex].startTime}`
-  //       );
-
-  //       g_passedPages[beforeIndex].totalTime += distance;
-  //       g_passedPages[beforeIndex].isAddTime = false;
-  //       g_passedPages[beforeIndex].startTime = undefined;
-
-  //       g_passedPages[index].isAddTime = true;
-  //       g_passedPages[index].startTime = now;
-  //     }
-  //   }
-  // }
-
   let displayString;
 
   if (timeString === "+") {
