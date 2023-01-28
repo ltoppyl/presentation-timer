@@ -1,5 +1,10 @@
 // --------------------
 // Define Global Variables
+// g_passedPages = {
+//   isAddTime: bool,
+//   lastTime: Date,
+//   totalTime: int,
+// };
 let g_passedPages = {};
 let g_isFullScreen = false;
 let g_startTimeCountDown;
@@ -89,7 +94,11 @@ const pageInfoAnalysis = () => {
 
   if (!(pageInfo.innerText in g_passedPages)) {
     observer.observe(pageInfo, observerOptions);
-    g_passedPages[pageInfo.innerText] = true;
+    g_passedPages[pageInfo.innerText] = {
+      isAddTime: false,
+      lastTime: undefined,
+      totalTime: 0,
+    };
   }
 
   const htmlCollection = iframe.contentWindow.document.getElementsByTagName("text");
@@ -130,6 +139,17 @@ document.addEventListener("fullscreenchange", function () {
       g_startTimeCountDown = undefined;
       g_startTimeCountUp = undefined;
       g_isFullScreen = false;
+
+      // Creating String for Alert Output
+      let displayAlertText = "";
+      let totalTime = 0;
+      for (const [key, value] of Object.entries(g_passedPages)) {
+        totalTime += value.totalTime;
+        displayAlertText += `Slide ${key} : ${conversionSecToString(value.totalTime)}\n`;
+      }
+      displayAlertText += `--------------------\nTotal Time : ${conversionSecToString(totalTime)}`;
+
+      window.alert(displayAlertText);
       g_passedPages = {};
     }
   }, 100);
