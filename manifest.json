@@ -14,7 +14,8 @@
         "src/content.js",
         "src/conversionSecToString.js",
         "src/calCountUp.js",
-        "src/calCountDown.js"
+        "src/calCountDown.js",
+        "src/calTotalTime.js"
       ]
     }
   ]

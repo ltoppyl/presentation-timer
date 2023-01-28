@@ -104,18 +104,8 @@ const pageInfoAnalysis = () => {
 
   if (g_lastIndex !== undefined) {
     if (g_lastIndex !== pageInfo.innerText) {
-      const d = new Date();
-      const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-      let distance = now - g_passedPages[g_lastIndex].startTime;
-
-      // Support only when the date is shifted by one day, such as when crossing a date.
-      if (distance < 0) {
-        distance = 86400 + distance;
-      }
-
-      g_passedPages[g_lastIndex].totalTime += distance;
-      g_passedPages[g_lastIndex].startTime = undefined;
-      g_passedPages[pageInfo.innerText].startTime = now;
+      // src/calTotalTime.js
+      calTotalTime(pageInfo.innerText);
     }
   }
 
@@ -160,18 +150,11 @@ document.addEventListener("fullscreenchange", function () {
       g_startTimeCountUp = undefined;
       g_isFullScreen = false;
 
+      // Add time for the last open slide
+      // After this g_passedPages is initialized, so the arguments are passed as appropriate
+      calTotalTime(g_lastIndex); // src/calTotalTime.js
+
       // Creating String for Alert Output
-      const d = new Date();
-      const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-      let distance = now - g_passedPages[g_lastIndex].startTime;
-
-      // Support only when the date is shifted by one day, such as when crossing a date.
-      if (distance < 0) {
-        distance = 86400 + distance;
-      }
-
-      g_passedPages[g_lastIndex].totalTime += distance;
-
       let displayAlertText = "";
       let totalTime = 0;
       for (const [key, value] of Object.entries(g_passedPages)) {
