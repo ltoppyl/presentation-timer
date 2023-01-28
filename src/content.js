@@ -36,13 +36,13 @@ const textElementAnalysis = (element) => {
     // src/calCountUp.js
     displayString = calCountUp();
   } else if (timeString === "time") {
-    // 現在時刻の表示
+    // Display of current time
     const d = new Date();
     displayString = `${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${(
       "0" + d.getSeconds()
     ).slice(-2)}`;
   } else if (timeString === "today") {
-    // 現在時刻の表示
+    // Display Date
     const d = new Date();
     displayString = `${d.getFullYear()}/${("0" + (d.getMonth() + 1)).slice(-2)}/${(
       "0" + d.getDate()
