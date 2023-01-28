@@ -10,7 +10,7 @@ const calCountDown = (timeString) => {
 
   const d = new Date();
 
-  if (!g_startTimeCountDown) {
+  if (g_startTimeCountDown == undefined) {
     g_startTimeCountDown = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
   }
 

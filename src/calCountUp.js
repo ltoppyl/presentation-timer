@@ -1,7 +1,7 @@
 const calCountUp = () => {
   const d = new Date();
 
-  if (!g_startTimeCountUp) {
+  if (g_startTimeCountUp == undefined) {
     g_startTimeCountUp = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
   }
 
