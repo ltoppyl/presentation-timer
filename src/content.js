@@ -98,9 +98,9 @@ const pageInfoAnalysis = () => {
     return;
   }
 
-  [...htmlCollection].forEach((element, i) => {
+  [...htmlCollection].forEach((element) => {
     if (0 < element.innerHTML.length) {
-      textElementAnalysis(element, i);
+      textElementAnalysis(element);
     }
   });
 };
