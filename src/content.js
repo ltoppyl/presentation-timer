@@ -110,6 +110,7 @@ const pageInfoAnalysis = () => {
 
   const htmlCollection = iframe.contentWindow.document.getElementsByTagName("text");
   if (htmlCollection.length == 0) {
+    setTimeout(pageInfoAnalysis, 500);
     return;
   }
 
