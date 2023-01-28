@@ -1,14 +1,14 @@
 // --------------------
 // Define Global Variables
 // g_passedPages = {
-//   isAddTime: bool,
-//   lastTime: Date,
+//   startTime: int,
 //   totalTime: int,
 // };
 let g_passedPages = {};
 let g_isFullScreen = false;
 let g_startTimeCountDown;
 let g_startTimeCountUp;
+let g_lastIndex = undefined;
 // --------------------
 
 const textElementAnalysis = (element) => {
@@ -34,6 +34,52 @@ const textElementAnalysis = (element) => {
   if (!timeString) {
     return;
   }
+
+  // const iframe = document.querySelector("iframe.punch-present-iframe");
+  // if (iframe) {
+  //   const index = iframe.contentWindow.document.querySelector(
+  //     '[role="option"][aria-selected="true"]'
+  //   ).innerHTML;
+  //   if (index && index in g_passedPages) {
+  //     // true の index が変わったかどうかの判定
+  //     // 変わった場合、それまで true だったものの startTime と今の差分で時間をadd, startTime を undefined に
+  //     // + 新しく true になったものの startTime を設定
+  //     // 変わってない場合は特にすることなし！
+
+  //     let beforeIndex = "-1";
+
+  //     console.log(g_passedPages);
+
+  //     for (const [key, value] of Object.entries(g_passedPages)) {
+  //       if (value.isAddTime == true) {
+  //         beforeIndex = key;
+  //       }
+  //     }
+
+  //     if (index !== beforeIndex) {
+  //       // 前の分を add
+  //       const d = new Date();
+  //       const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  //       let distance = now - g_passedPages[beforeIndex].startTime;
+
+  //       // Support only when the date is shifted by one day, such as when crossing a date.
+  //       if (distance < 0) {
+  //         distance = 86400 + distance;
+  //       }
+
+  //       console.log(
+  //         `beforeIndex: ${beforeIndex} index: ${index} distance: ${distance} now: ${now} startTime: ${g_passedPages[beforeIndex].startTime}`
+  //       );
+
+  //       g_passedPages[beforeIndex].totalTime += distance;
+  //       g_passedPages[beforeIndex].isAddTime = false;
+  //       g_passedPages[beforeIndex].startTime = undefined;
+
+  //       g_passedPages[index].isAddTime = true;
+  //       g_passedPages[index].startTime = now;
+  //     }
+  //   }
+  // }
 
   let displayString;
 
@@ -94,12 +140,32 @@ const pageInfoAnalysis = () => {
 
   if (!(pageInfo.innerText in g_passedPages)) {
     observer.observe(pageInfo, observerOptions);
+    const d = new Date();
+    const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
     g_passedPages[pageInfo.innerText] = {
-      isAddTime: false,
-      lastTime: undefined,
+      startTime: now,
       totalTime: 0,
     };
   }
+
+  if (g_lastIndex !== undefined) {
+    if (g_lastIndex !== pageInfo.innerText) {
+      const d = new Date();
+      const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+      let distance = now - g_passedPages[g_lastIndex].startTime;
+
+      // Support only when the date is shifted by one day, such as when crossing a date.
+      if (distance < 0) {
+        distance = 86400 + distance;
+      }
+
+      g_passedPages[g_lastIndex].totalTime += distance;
+      g_passedPages[g_lastIndex].startTime = undefined;
+      g_passedPages[pageInfo.innerText].startTime = now;
+    }
+  }
+
+  g_lastIndex = pageInfo.innerText;
 
   const htmlCollection = iframe.contentWindow.document.getElementsByTagName("text");
 
@@ -141,6 +207,17 @@ document.addEventListener("fullscreenchange", function () {
       g_isFullScreen = false;
 
       // Creating String for Alert Output
+      const d = new Date();
+      const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+      let distance = now - g_passedPages[g_lastIndex].startTime;
+
+      // Support only when the date is shifted by one day, such as when crossing a date.
+      if (distance < 0) {
+        distance = 86400 + distance;
+      }
+
+      g_passedPages[g_lastIndex].totalTime += distance;
+
       let displayAlertText = "";
       let totalTime = 0;
       for (const [key, value] of Object.entries(g_passedPages)) {
@@ -151,6 +228,7 @@ document.addEventListener("fullscreenchange", function () {
 
       window.alert(displayAlertText);
       g_passedPages = {};
+      g_lastIndex = undefined;
     }
   }, 100);
 });
