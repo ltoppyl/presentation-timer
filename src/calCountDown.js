@@ -6,7 +6,7 @@ const calCountDown = (timeString) => {
     return;
   }
 
-  const countdownSec = 60 * timeArray[0] + timeArray[1];
+  const countdownSec = 60 * Number(timeArray[0]) + Number(timeArray[1]);
 
   const d = new Date();
 
