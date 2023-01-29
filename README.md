@@ -5,8 +5,7 @@ Presentation Timer は、Google Slides を使ったプレゼンテーション�
 <br />
 
 ## 🎥 デモ
-
-TODO: デモを挿入する
+<img src="images/demo.gif" alt="Sample signal" width="70%" height="70%">
 
 <br />
 
