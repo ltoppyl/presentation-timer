@@ -7,6 +7,9 @@
   "icons": {
     "128": "images/icon_128.png"
   },
+  "action": {
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "matches": ["https://docs.google.com/presentation/*"],
