@@ -7,7 +7,7 @@
 let g_passedPages = {};
 
 let g_isFullScreen = false;
-let g_startTimeCountDown = undefined;
+let g_startTimeCountDown = {};
 let g_startTimeCountUp = undefined;
 let g_lastIndex = undefined;
 // --------------------
@@ -172,7 +172,7 @@ document.addEventListener("fullscreenchange", function () {
 
       g_passedPages = {};
       g_isFullScreen = false;
-      g_startTimeCountDown = undefined;
+      g_startTimeCountDown = {};
       g_startTimeCountUp = undefined;
       g_lastIndex = undefined;
     }
