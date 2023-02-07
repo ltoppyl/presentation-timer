@@ -10,12 +10,12 @@ const calCountDown = (timeString) => {
 
   const d = new Date();
 
-  if (g_startTimeCountDown == undefined) {
-    g_startTimeCountDown = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
+  if (!(timeString in g_startTimeCountDown)) {
+    g_startTimeCountDown[timeString] = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
   }
 
   const now = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds();
-  let distance = countdownSec - (now - g_startTimeCountDown);
+  let distance = countdownSec - (now - g_startTimeCountDown[timeString]);
 
   if (distance < 0) {
     distance = 0;
