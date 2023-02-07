@@ -1,4 +1,4 @@
-[日本語版はこちら](README_EN.md)
+[日本語版はこちら](README.md)
 
 # ⏳ Presentation Timer
 
