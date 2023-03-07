@@ -10,6 +10,7 @@ let g_isFullScreen = false;
 let g_startTimeCountDown = {};
 let g_startTimeCountUp = undefined;
 let g_lastIndex = undefined;
+let g_presenterMode = false; // Full screen, not presenter mode or not.
 // --------------------
 
 const textElementAnalysis = (element) => {
@@ -134,47 +135,78 @@ const observer = new MutationObserver(callback);
 const observerOptions = { attributes: true, childList: true };
 // --------------------
 
-document.addEventListener("fullscreenchange", function () {
+const startTimer = () => {
+  observer.observe(document.documentElement, observerOptions);
+  g_isFullScreen = true;
+  pageInfoAnalysis();
+};
+
+const initialized = () => {
+  g_passedPages = {};
+  g_isFullScreen = false;
+  g_startTimeCountDown = {};
+  g_startTimeCountUp = undefined;
+  g_lastIndex = undefined;
+  g_presenterMode = false;
+};
+
+const displayLapTime = () => {
+  // Add time for the last open slide
+  // After this g_passedPages is initialized, so the arguments are passed as appropriate
+  calTotalTime(g_lastIndex); // src/calTotalTime.js
+  // Creating String for Alert Output
+  let displayAlertText = "";
+  let totalTime = 0;
+  let i = 0;
+  for (const [key, value] of Object.entries(g_passedPages)) {
+    totalTime += value.totalTime;
+    if (i !== 0 && i % 5 == 0) {
+      displayAlertText += `\n${("0" + key).slice(-2)} : ${conversionSecToString(
+        value.totalTime
+      )}     `;
+    } else {
+      displayAlertText += `${("0" + key).slice(-2)} : ${conversionSecToString(
+        value.totalTime
+      )}     `;
+    }
+    i += 1;
+  }
+  displayAlertText += `\n--------------------\nTotal Time: ${conversionSecToString(totalTime)}`;
+  window.alert(displayAlertText);
+};
+
+const eventFiring = () => {
   setTimeout(function () {
     if (document.fullscreenElement) {
-      console.log("Entered full screen mode.");
-      observer.observe(document.documentElement, observerOptions);
-      g_isFullScreen = true;
-      pageInfoAnalysis();
+      startTimer();
     } else {
-      console.log("Exited full screen mode.");
-
-      // Add time for the last open slide
-      // After this g_passedPages is initialized, so the arguments are passed as appropriate
-      calTotalTime(g_lastIndex); // src/calTotalTime.js
-
-      // Creating String for Alert Output
-      let displayAlertText = "";
-      let totalTime = 0;
-      let i = 0;
-      for (const [key, value] of Object.entries(g_passedPages)) {
-        totalTime += value.totalTime;
-        if (i !== 0 && i % 5 == 0) {
-          displayAlertText += `\n${("0" + key).slice(-2)} : ${conversionSecToString(
-            value.totalTime
-          )}     `;
-        } else {
-          displayAlertText += `${("0" + key).slice(-2)} : ${conversionSecToString(
-            value.totalTime
-          )}     `;
-        }
-
-        i += 1;
-      }
-      displayAlertText += `\n--------------------\nTotal Time: ${conversionSecToString(totalTime)}`;
-
-      window.alert(displayAlertText);
-
-      g_passedPages = {};
-      g_isFullScreen = false;
-      g_startTimeCountDown = {};
-      g_startTimeCountUp = undefined;
-      g_lastIndex = undefined;
+      displayLapTime();
+      initialized();
     }
   }, 100);
-});
+};
+
+const handleClickPresenterMode = () => {
+  g_presenterMode = true;
+  startTimer();
+};
+
+const handleKeyPress = (e) => {
+  if (g_presenterMode && e.key == "Escape") {
+    displayLapTime();
+    initialized();
+  }
+};
+
+document.addEventListener("keyup", handleKeyPress);
+document.addEventListener("fullscreenchange", eventFiring);
+
+// Delayed to avoid going through before reading the data and becoming undefined.
+setTimeout(() => {
+  const presenterMode = document.getElementsByClassName(
+    "punch-qanda-presenter-view-menu-item-content apps-menuitem goog-menuitem"
+  );
+  const presenterModeInitialStart = document.getElementsByClassName("goog-menuitem apps-menuitem");
+  presenterMode[0].addEventListener("click", handleClickPresenterMode);
+  presenterModeInitialStart[0].addEventListener("click", handleClickPresenterMode);
+}, 5000);
